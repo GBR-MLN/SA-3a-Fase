@@ -20,7 +20,10 @@ async function fetchData() {
         });
         const dataTemp = await responseTemp.json();
         // Exibe os dados de temperatura na página
-        document.getElementById('dadosTemp').innerText = `Última temperatura medida: ${dataTemp.result[0].value} °C`;
+        document.getElementById('dadosTemp').innerText = `${dataTemp.result[0].value} °C`;
+
+        const newTemperature = parseFloat(dataTemp.result[0].value)
+        updateTemperatureChart(newTemperature);
 
         // Solicitação de dados de umidade
         const responseUmi = await fetch(apiUrlGetDataUmi, {
@@ -31,102 +34,76 @@ async function fetchData() {
         });
         const dataUmi = await responseUmi.json();
         // Exibe os dados de umidade na página
-        document.getElementById('dadosUmid').innerText = `Última umidade medida: ${dataUmi.result[0].value}%`;
+        document.getElementById('dadosUmid').innerText = `${dataUmi.result[0].value}%`;
+
+        const newUmidade = parseFloat(dataUmi.result[0].value)
+        updateUmidadeChart(newUmidade);
+
     } catch (error) {
         console.error('Erro ao recuperar dados:', error);
     }
 }
 
-// async function sendData() {
-//     try {
-
-//         const responseTemp = await fetch(apiUrlGetDataTemp, {
-//             headers: {
-//                 'Content-Type': 'application/json',
-//                 'Device-Token': token
-//             }
-//         });
-//         const dataTemp = await responseTemp.json();
-
-//         const responseUmi = await fetch(apiUrlGetDataUmi, {
-//             headers: {
-//                 'Content-Type': 'application/json',
-//                 'Device-Token': token
-//             }
-//         });
-//         const dataUmi = await responseUmi.json();
-
-//         const body = {
-//             variable1: variableName1,
-//             value1: dataTemp.result[0].value,
-//             variable2: variableName2,
-//             value2: dataUmi.result[0].value
-//         };
-
-//         const response = await fetch(apiUrlSendData, {
-//             method: 'POST',
-//             headers: {
-//                 'Content-Type': 'application/json',
-//                 'Device-Token': token
-//             },
-//             body: JSON.stringify(body)
-//         });
-//         const result = await response.json();
-//         console.log('Dados enviados com sucesso:', result);
-//         // Atualiza os dados exibidos após o envio bem-sucedido
-//         fetchData();
-//     } catch (error) {
-//         console.error('Erro ao enviar dados:', error);
-//     }
-// }
-
-async function drawChart() {
-
-    // const responseTemp = await fetch(apiUrlGetDataTemp, {
-    //     headers: {
-    //         'Content-Type': 'application/json',
-    //         'Device-Token': token
-    //     }
-    // });
-    // const dataTemp = await responseTemp.json();
-
-    new Chart(tempChart, {
-        type: 'area',
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        },
-
+// Inicialização do Chart.js
+var mainChart;
+document.addEventListener('DOMContentLoaded', function () {
+    var ctx = document.getElementById('tempChart').getContext('2d');
+    mainChart = new Chart(ctx, {
+        type: 'bar',
         data: {
-            datasets: [
-                {
-                    label: 'Temperatura',
-                    data: [
-                        { year: 2010, count: 10 },
-                        { year: 2011, count: 20 },
-                        { year: 2012, count: 15 },
-                        { year: 2013, count: 25 },
-                        { year: 2014, count: 22 },
-                        { year: 2015, count: 30 },
-                        { year: 2016, count: 28 },
-                      ]
-                }
-            ]
+            labels: [],
+            datasets: [{
+                label: 'Temperatura(°C)',
+                backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1,
+                data: []
+            }, {
+                type: 'line',
+                label: 'Umidade(%)',
+                backgroundColor: 'rgba(196, 12, 12, 0.5)',
+                borderColor: 'rgba(196, 12, 12, 1)',
+                borderWidth: 1,
+                data: []
+            }]
         },
-    }
-    );
-};
+    });
+});
 
-// function updateChart() {
-// }
+// Função para atualizar os dados do gráfico de temperatura
+function updateTemperatureChart(newTemperature) {
+    // Adiciona o novo valor à lista de dados do gráfico
+    mainChart.data.labels.push(new Date().toLocaleTimeString());
+    mainChart.data.datasets[0].data.push(newTemperature);
+
+    // Limita o histórico do gráfico a 10 pontos
+    if (mainChart.data.labels.length > 10) {
+        mainChart.data.labels.shift();
+        mainChart.data.datasets[0].data.shift();
+    }
+
+    // Atualiza o gráfico
+    mainChart.update();
+
+}
+
+function updateUmidadeChart(newUmidade) {
+    // Adiciona o novo valor à lista de dados do gráfico
+    mainChart.data.datasets[1].data.push(newUmidade);
+
+    // Limita o histórico do gráfico a 10 pontos
+    if (mainChart.data.labels.length > 10) {
+        mainChart.data.labels.shift();
+        mainChart.data.datasets[0].data.shift();
+        mainChart.data.datasets[1].data.shift();
+    }
+
+    // Atualiza o gráfico
+    mainChart.update();
+}
 
 // Chama a função fetchData() quando a página é carregada
 window.onload = function () {
     fetchData();
     setInterval(fetchData, 5000);
-    drawChart();
-    setInterval(drawChart, 5000);
 };

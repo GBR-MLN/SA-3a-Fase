@@ -1,0 +1,87 @@
+body {
+    background-color: black;
+    margin: 0;
+    height: 100vh;
+}
+
+#titulo-container {
+    background-color: #50727B;
+    color: white;
+    text-align: center;
+    align-content: center;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-weight: 200;
+    font-optical-sizing: auto;
+    height: 100px;
+}
+
+#titulo {
+    margin: 0;
+}
+
+#variaveis-container {
+    /* border: 1px solid red; */
+    display: flex;
+    justify-content: space-around;
+    align-content: center;
+    height: 100px;
+    margin-top: 25px;
+}
+
+#temp-container {
+    background-color: #78A083;
+    border-radius: 10px;
+    text-align: center;
+    align-content: center;
+}
+
+#temp-titulo {
+    /* border: 1px solid red; */
+    margin: 0;
+    text-align: center;
+    align-content: center;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-weight: 200;
+    font-optical-sizing: auto;
+}
+
+#dadosTemp {
+    /* border: 1px solid red; */
+    margin: 0;
+    text-align: center;
+    align-content: center;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-weight: 200;
+    font-optical-sizing: auto;
+    font-size: 30px;
+    width: 250px;
+}
+
+#umid-container {
+    background-color: #78A083;
+    border-radius: 10px;
+    text-align: center;
+    align-content: center;
+}
+
+#umid-titulo {
+    /* border: 1px solid red; */
+    margin: 0;
+    text-align: center;
+    align-content: center;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-weight: 200;
+    font-optical-sizing: auto;
+}
+
+#dadosUmid {
+    /* border: 1px solid red; */
+    margin: 0;
+    text-align: center;
+    align-content: center;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-weight: 200;
+    font-size: 30px;
+    font-optical-sizing: auto;
+    width: 250px;
+}
